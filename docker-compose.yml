@@ -1,0 +1,47 @@
+version: "3"
+
+services:
+# Ngo app
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: capstone
+    container_name: Ngo-app
+    restart: unless-stopped
+    working_dir: /usr/scr/app
+    volumes:
+      - ./:/usr/scr/app
+    depends_on:
+      -  db
+    ports:
+      - "8080:8080"
+    networks:
+      - ngo-app
+
+
+
+# Mongodb database
+  db:
+    image: mongo
+    restart: always
+    ports:
+        - "27018:27017"
+    container_name: capstone-mongodb
+    environment:
+     - MONGO_INITDB_ROOT_USERNAME=admin
+     - MONGO_INITDB_ROOT_PASSWORD=password
+     - MONGO_INITDB_DATABASE=admin
+    volumes:
+     - mongo-data:/data/db
+    networks:
+      - ngo-app
+
+
+volumes:
+  mongo-data:
+    # driver: bridge
+
+networks:
+  ngo-app:
+    # driver: bridge
